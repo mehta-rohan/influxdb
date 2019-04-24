@@ -17,7 +17,7 @@ func TestGroupGroupResultSetSorting(t *testing.T) {
 	tests := []struct {
 		name  string
 		cur   reads.SeriesCursor
-		group datatypes.ReadRequest_Group
+		group datatypes.ReadGroupRequest_Group
 		keys  []string
 		exp   string
 	}{
@@ -210,7 +210,7 @@ func TestNewGroupResultSet_GroupNone_NoDataReturnsNil(t *testing.T) {
 			)}, nil
 	}
 
-	rs := reads.NewGroupResultSet(context.Background(), &datatypes.ReadRequest{Group: datatypes.GroupNone}, newCursor)
+	rs := reads.NewGroupedResultSet(context.Background(), &datatypes.ReadGroupRequest{Group: datatypes.GroupNone}, newCursor)
 	if rs != nil {
 		t.Errorf("expected nil cursor")
 	}
@@ -225,7 +225,7 @@ func TestNewGroupResultSet_GroupBy_NoDataReturnsNil(t *testing.T) {
 			)}, nil
 	}
 
-	rs := reads.NewGroupResultSet(context.Background(), &datatypes.ReadRequest{Group: datatypes.GroupBy, GroupKeys: []string{"tag0"}}, newCursor)
+	rs := reads.NewGroupedResultSet(context.Background(), &datatypes.ReadGroupRequest{Group: datatypes.GroupBy, GroupKeys: []string{"tag0"}}, newCursor)
 	if rs != nil {
 		t.Errorf("expected nil cursor")
 	}
@@ -379,9 +379,7 @@ func BenchmarkNewGroupResultSet_GroupBy(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		var hints datatypes.HintFlags
-		hints.SetHintSchemaAllTime()
-		rs := reads.NewGroupResultSet(context.Background(), &datatypes.ReadRequest{Group: datatypes.GroupBy, GroupKeys: []string{"tag2"}, Hints: hints}, newCursor)
+		rs := reads.NewGroupedResultSet(context.Background(), &datatypes.ReadGroupRequest{Group: datatypes.GroupBy, GroupKeys: []string{"tag2"}}, newCursor)
 		rs.Close()
 	}
 }

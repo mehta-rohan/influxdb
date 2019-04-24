@@ -99,7 +99,7 @@ func TestResponseWriter_WriteGroupResultSet_Stats(t *testing.T) {
 		return mock.NewIntegerArrayCursor()
 	}
 
-	rs := mock.NewGroupResultSet()
+	rs := mock.NewGroupedResultSet()
 	rsNextHasBeenCalledOnce := false
 	rs.NextFunc = func() reads.GroupCursor {
 		if !rsNextHasBeenCalledOnce {
