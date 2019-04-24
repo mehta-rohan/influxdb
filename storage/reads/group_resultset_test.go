@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+
 	"github.com/influxdata/influxdb/models"
 	"github.com/influxdata/influxdb/pkg/data/gen"
 	"github.com/influxdata/influxdb/storage/reads"
@@ -181,7 +182,14 @@ group:
 
 			var hints datatypes.HintFlags
 			hints.SetHintSchemaAllTime()
-			rs := reads.NewGroupResultSet(context.Background(), &datatypes.ReadRequest{Group: tt.group, GroupKeys: tt.keys, Hints: hints}, newCursor)
+			rs := reads.NewGroupedResultSet(context.Background(), &datatypes.ReadGroupRequest{
+				Group:     tt.group,
+				GroupKeys: tt.keys,
+				// TODO(jlapacik):
+				//     Hints is not used except for the tests in this file.
+				//     Eventually this field should be removed entirely.
+				Hints: hints,
+			}, newCursor)
 
 			sb := new(strings.Builder)
 			GroupResultSetToString(sb, rs, SkipNilCursor())
@@ -300,7 +308,14 @@ group:
 
 			var hints datatypes.HintFlags
 			hints.SetHintSchemaAllTime()
-			rs := reads.NewGroupResultSet(context.Background(), &datatypes.ReadRequest{Group: datatypes.GroupBy, GroupKeys: tt.keys, Hints: hints}, newCursor, tt.opts...)
+			rs := reads.NewGroupedResultSet(context.Background(), &datatypes.ReadGroupRequest{
+				Group:     datatypes.GroupBy,
+				GroupKeys: tt.keys,
+				// TODO(jlapacik):
+				//     Hints is not used except for the tests in this file.
+				//     Eventually this field should be removed entirely.
+				Hints: hints,
+			}, newCursor, tt.opts...)
 
 			sb := new(strings.Builder)
 			GroupResultSetToString(sb, rs, SkipNilCursor())
