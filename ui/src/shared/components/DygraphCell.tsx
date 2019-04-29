@@ -1,6 +1,9 @@
 // Libraries
 import React, {PureComponent, CSSProperties} from 'react'
 
+// Components
+import GraphLoadingDots from 'src/shared/components/GraphLoadingDots'
+
 // Types
 import {RemoteDataState} from 'src/types'
 
@@ -8,14 +11,6 @@ interface Props {
   loading: RemoteDataState
   children: JSX.Element
 }
-
-const GraphLoadingDots = () => (
-  <div className="graph-panel__refreshing">
-    <div />
-    <div />
-    <div />
-  </div>
-)
 
 class DygraphCell extends PureComponent<Props> {
   public render() {
