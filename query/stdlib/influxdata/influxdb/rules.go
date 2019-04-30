@@ -34,8 +34,10 @@ func (rule PushDownGroupRule) Rewrite(node plan.Node) (plan.Node, bool, error) {
 	src := node.Predecessors()[0].ProcedureSpec().(*ReadRangePhysSpec)
 	grp := node.ProcedureSpec().(*universe.GroupProcedureSpec)
 
-	// GroupExcept not a supported
-	if grp.GroupMode == flux.GroupModeExcept {
+	switch grp.GroupMode {
+	case
+		flux.GroupModeBy:
+	default:
 		return node, false, nil
 	}
 
