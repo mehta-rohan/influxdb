@@ -214,20 +214,7 @@ func TestPushDownGroupRule(t *testing.T) {
 					{0, 2},
 				},
 			},
-			After: &plantest.PlanSpec{
-				Nodes: []plan.Node{
-					plan.CreateLogicalNode("ReadRange", &readRange),
-					plan.CreateLogicalNode("group", &universe.GroupProcedureSpec{
-						GroupMode: flux.GroupModeBy,
-						GroupKeys: []string{"_measurement", "tag0", "tag1"},
-					}),
-					plan.CreatePhysicalNode("count", &universe.CountProcedureSpec{}),
-				},
-				Edges: [][2]int{
-					{0, 1},
-					{0, 2},
-				},
-			},
+			NoChange: true,
 		},
 		{
 			Name: "un-group",
@@ -239,7 +226,8 @@ func TestPushDownGroupRule(t *testing.T) {
 				Nodes: []plan.Node{
 					plan.CreateLogicalNode("ReadRange", &readRange),
 					plan.CreateLogicalNode("group", &universe.GroupProcedureSpec{
-						GroupMode: flux.GroupModeNone,
+						GroupMode: flux.GroupModeBy,
+						GroupKeys: []string{},
 					}),
 				},
 				Edges: [][2]int{
@@ -250,7 +238,8 @@ func TestPushDownGroupRule(t *testing.T) {
 				Nodes: []plan.Node{
 					plan.CreatePhysicalNode("ReadGroup", &influxdb.ReadGroupPhysSpec{
 						ReadRangePhysSpec: readRange,
-						GroupMode:         flux.GroupModeNone,
+						GroupMode:         flux.GroupModeBy,
+						GroupKeys:         []string{},
 					}),
 				},
 			},
@@ -273,18 +262,26 @@ func TestPushDownGroupRule(t *testing.T) {
 					{0, 1},
 				},
 			},
-			After: &plantest.PlanSpec{
+			NoChange: true,
+		},
+		{
+			Name: "group none",
+			Rules: []plan.Rule{
+				influxdb.PushDownGroupRule{},
+			},
+			Before: &plantest.PlanSpec{
 				Nodes: []plan.Node{
 					plan.CreateLogicalNode("ReadRange", &readRange),
 					plan.CreateLogicalNode("group", &universe.GroupProcedureSpec{
-						GroupMode: flux.GroupModeExcept,
-						GroupKeys: []string{"_measurement", "tag0", "tag1"},
+						GroupMode: flux.GroupModeNone,
+						GroupKeys: []string{},
 					}),
 				},
 				Edges: [][2]int{
 					{0, 1},
 				},
 			},
+			NoChange: true,
 		},
 		{
 			Name: "cannot push down",
@@ -306,20 +303,7 @@ func TestPushDownGroupRule(t *testing.T) {
 					{1, 2},
 				},
 			},
-			After: &plantest.PlanSpec{
-				Nodes: []plan.Node{
-					plan.CreateLogicalNode("ReadRange", &readRange),
-					plan.CreatePhysicalNode("count", &universe.CountProcedureSpec{}),
-					plan.CreateLogicalNode("group", &universe.GroupProcedureSpec{
-						GroupMode: flux.GroupModeBy,
-						GroupKeys: []string{"_measurement", "tag0", "tag1"},
-					}),
-				},
-				Edges: [][2]int{
-					{0, 1},
-					{1, 2},
-				},
-			},
+			NoChange: true,
 		},
 	}
 
