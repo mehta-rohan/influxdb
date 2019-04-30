@@ -43,7 +43,7 @@ func GroupOptionNilSortLo() GroupOption {
 	}
 }
 
-func NewGroupedResultSet(ctx context.Context, req *datatypes.ReadGroupRequest, newCursorFn func() (SeriesCursor, error), opts ...GroupOption) GroupResultSet {
+func NewGroupResultSet(ctx context.Context, req *datatypes.ReadGroupRequest, newCursorFn func() (SeriesCursor, error), opts ...GroupOption) GroupResultSet {
 	g := &groupResultSet{
 		ctx:         ctx,
 		req:         req,

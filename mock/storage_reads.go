@@ -78,7 +78,7 @@ type GroupResultSet struct {
 	ErrFunc   func() error
 }
 
-func NewGroupedResultSet() *GroupResultSet {
+func NewGroupResultSet() *GroupResultSet {
 	return &GroupResultSet{
 		NextFunc:  func() reads.GroupCursor { return nil },
 		CloseFunc: func() {},

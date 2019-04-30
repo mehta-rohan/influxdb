@@ -64,7 +64,7 @@ func (s *store) ReadGroup(ctx context.Context, req *datatypes.ReadGroupRequest) 
 		return cur, nil
 	}
 
-	return reads.NewGroupedResultSet(ctx, req, newCursor), nil
+	return reads.NewGroupResultSet(ctx, req, newCursor), nil
 }
 
 func (s *store) Read(ctx context.Context, req *datatypes.ReadRequest) (reads.ResultSet, error) {
