@@ -1,16 +1,17 @@
 // Libraries
-import React, {useMemo, FunctionComponent} from 'react'
+import React, {useMemo, useCallback, FunctionComponent} from 'react'
 import {Plot, Config, Table} from '@influxdata/vis'
 
 // Components
-import HistogramTooltip from 'src/shared/components/HistogramTooltip'
 import EmptyGraphMessage from 'src/shared/components/EmptyGraphMessage'
 
 // Utils
 import {useOneWayState} from 'src/shared/utils/useOneWayState'
+import {formatNumber} from 'src/shared/utils/vis'
 
 // Constants
 import {INVALID_DATA_COPY} from 'src/shared/copy/cell'
+import {VIS_THEME} from 'src/shared/constants'
 
 // Types
 import {HistogramView} from 'src/types/dashboards'
@@ -33,6 +34,12 @@ const Histogram: FunctionComponent<Props> = ({
   },
 }) => {
   const [xDomain, onSetXDomain] = useOneWayState(defaultXDomain)
+
+  const onResetXDomain = useCallback(() => onSetXDomain(defaultXDomain), [
+    defaultXDomain,
+    onSetXDomain,
+  ])
+
   const colorHexes = useMemo(() => colors.map(c => c.hex), [colors])
 
   const isValidView =
@@ -46,12 +53,13 @@ const Histogram: FunctionComponent<Props> = ({
 
   const config: Config = useMemo(
     () => ({
+      ...VIS_THEME,
       table,
       xDomain,
       onSetXDomain,
+      onResetXDomain,
       xAxisLabel,
-      tickFont: 'bold 10px Roboto',
-      tickFill: '#8e91a1',
+      xTickFormatter: formatNumber,
       layers: [
         {
           type: 'histogram' as 'histogram',
@@ -59,7 +67,6 @@ const Histogram: FunctionComponent<Props> = ({
           fill: fillColumns,
           binCount,
           position,
-          tooltip: HistogramTooltip,
           colors: colorHexes,
         },
       ],
@@ -68,6 +75,7 @@ const Histogram: FunctionComponent<Props> = ({
       table,
       xDomain,
       onSetXDomain,
+      onResetXDomain,
       xAxisLabel,
       xColumn,
       fillColumns,
@@ -77,7 +85,11 @@ const Histogram: FunctionComponent<Props> = ({
     ]
   )
 
-  return <Plot config={config} />
+  return (
+    <div className="histogram-container">
+      <Plot config={config} />
+    </div>
+  )
 }
 
 export default Histogram

@@ -11,7 +11,7 @@ const formatSmallNumber = format(`.${MAX_DECIMALS}~f`) // e.g. "0.032"
 
 const formatLargeNumber = format(`.${MAX_DECIMALS}~s`) // e.g. "2.452M"
 
-export const formatNumber = (t: number) => {
+export const formatNumber = (t: number): string => {
   if (t >= -1 && t <= 1) {
     return formatSmallNumber(t)
   }

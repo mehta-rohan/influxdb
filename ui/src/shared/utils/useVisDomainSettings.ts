@@ -1,8 +1,9 @@
 // Libraries
-import {useState, useMemo} from 'react'
+import {useMemo} from 'react'
 import {extent} from 'd3-array'
 
 // Utils
+import {useOneWayState} from 'src/shared/utils/useOneWayState'
 import {parseBounds} from 'src/shared/utils/vis'
 
 // Types
@@ -30,7 +31,7 @@ export const useVisDomainSettings = (
     }
   }, [bounds, data])
 
-  const [domain, setDomain] = useState(initialDomain)
+  const [domain, setDomain] = useOneWayState(initialDomain)
   const resetDomain = () => setDomain(initialDomain)
 
   return [domain, setDomain, resetDomain]

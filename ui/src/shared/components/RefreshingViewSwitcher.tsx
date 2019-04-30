@@ -88,7 +88,7 @@ const RefreshingViewSwitcher: FunctionComponent<Props> = ({
       )
     case ViewType.Histogram:
       return (
-        <VisTableTransform tables={tables}>
+        <VisTableTransform files={files}>
           {table => <Histogram table={table} properties={properties} />}
         </VisTableTransform>
       )
